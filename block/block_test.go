@@ -1,21 +1,17 @@
-// Copyright (c) 2018 The VeChainThor developers
-
-// Distributed under the GNU Lesser General Public License v3.0 software license, see the accompanying
-// file LICENSE or <https://www.gnu.org/licenses/lgpl-3.0.html>
-
 package block_test
 
 import (
 	"testing"
 	"time"
+  "fmt"
 
 	"github.com/stretchr/testify/assert"
 
 	// "github.com/ethereum/go-ethereum/crypto"
 	// "github.com/ethereum/go-ethereum/rlp"
 	. "github.com/floydeconomy/blockchain/block"
-  "github.com/floydeconomy/blockchain/types"
-	// "github.com/vechain/thor/tx"
+  // "github.com/floydeconomy/blockchain/types"
+	"github.com/vechain/thor/thor"
 )
 
 func TestBlock(t *testing.T) {
@@ -27,8 +23,8 @@ func TestBlock(t *testing.T) {
 	now := uint64(time.Now().UnixNano())
 
 	var (
-		emptyRoot   types.Bytes32 = types.BytesToBytes32([]byte("0"))
-		beneficiary types.Address = types.BytesToAddress([]byte("abc"))
+		emptyRoot   thor.Bytes32 = thor.BytesToBytes32([]byte("0"))
+		beneficiary thor.Address = thor.BytesToAddress([]byte("abc"))
 	)
 
 	block := new(Builder).
@@ -45,7 +41,7 @@ func TestBlock(t *testing.T) {
   assert.Equal(t, emptyRoot, h.ParentID())
 	assert.Equal(t, beneficiary, h.Beneficiary())
 
-  // fmt.Println(h.ID())
+  fmt.Println(h.ID())
 
 
 

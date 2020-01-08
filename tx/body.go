@@ -1,7 +1,7 @@
 package tx
 
 import (
-  "github.com/floydeconomy/blockchain/types"
+  "github.com/vechain/thor/thor"
 )
 
 // Body contains the body information for a transaction
@@ -11,7 +11,7 @@ type Body struct {
 
 // Clause contains the transaction information
 type Clause struct {
-  Payee   types.Address
-  Payer   types.Address
+  Payee   thor.Address
+  Payer   thor.Address
   Amount  uint32
 }

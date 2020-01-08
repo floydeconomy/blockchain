@@ -2,7 +2,7 @@ package block
 
 import (
   "github.com/floydeconomy/blockchain/tx"
-  "github.com/floydeconomy/blockchain/types"
+  "github.com/vechain/thor/thor"
 )
 
 // Builder easy block building
@@ -12,7 +12,7 @@ type Builder struct {
 }
 
 // ParentID set parent id.
-func (b *Builder) ParentID(id types.Bytes32) *Builder {
+func (b *Builder) ParentID(id thor.Bytes32) *Builder {
 	b.blockHeader.ParentID = id
 	return b
 }
@@ -24,7 +24,7 @@ func (b *Builder) Timestamp(ts uint64) *Builder {
 }
 
 // Beneficiary set beneficiary
-func (b *Builder) Beneficiary(addr types.Address) *Builder {
+func (b *Builder) Beneficiary(addr thor.Address) *Builder {
   b.blockHeader.Beneficiary = addr
   return b
 }
