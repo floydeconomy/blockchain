@@ -9,7 +9,7 @@ import (
 
 	// "github.com/ethereum/go-ethereum/crypto"
 	// "github.com/ethereum/go-ethereum/rlp"
-	. "github.com/floydeconomy/blockchain/block"
+	. "github.com/floydeconomy/blockchain/core/types/block"
 	// "github.com/floydeconomy/blockchain/types"
 	"github.com/vechain/thor/thor"
 )
@@ -49,7 +49,6 @@ func TestBlock(t *testing.T) {
 	// body := block.Body()
 	// txsRootHash := txs.RootHash()
 	//
-	// fmt.Println(h.ID())
 	//
 	// assert.Equal(t, body.Txs, txs)
 	// assert.Equal(t, Compose(h, txs), block)

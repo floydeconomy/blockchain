@@ -1,14 +1,14 @@
 package block
 
 import (
-	"github.com/floydeconomy/blockchain/tx"
+	"github.com/floydeconomy/blockchain/core/types/tx"
 	"github.com/vechain/thor/thor"
 )
 
 // Builder easy block building
 type Builder struct {
 	blockHeader HeaderBody
-	txs         tx.Transactions
+	txs         []*tx.Transaction
 }
 
 // ParentID set parent id.
@@ -45,7 +45,9 @@ func (b *Builder) Build() *Block {
 	header := Header{
 		body: headerBody,
 	}
-	body := Body{Txs: b.txs}
+	body := Body{
+		Txs: b.txs,
+	}
 	return &Block{
 		header: &header,
 		body:   &body,

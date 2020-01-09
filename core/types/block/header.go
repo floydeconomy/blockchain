@@ -39,12 +39,6 @@ func (h *Header) Number() uint32 {
 	return Number(h.body.ParentID) + 1
 }
 
-// Number extract block number from block id.
-func Number(blockID thor.Bytes32) uint32 {
-	// first 4 bytes are over written by block number (big endian).
-	return binary.BigEndian.Uint32(blockID[:])
-}
-
 // Timestamp returns timestamp of this block.
 func (h *Header) Timestamp() uint64 {
 	return h.body.Timestamp
@@ -55,8 +49,7 @@ func (h *Header) Beneficiary() thor.Address {
 	return h.body.Beneficiary
 }
 
-// ID returns the block hash of the header, which is simply the keccak256 hash of its
-// RLP encoding.
+// ID returns the block hash of the header, which is simply the keccak256 hash of its RLP Encoding
 func (h *Header) ID() common.Hash {
 	return Hash(h)
 }
@@ -67,4 +60,10 @@ func Hash(x interface{}) (h common.Hash) {
 	rlp.Encode(hw, x)
 	hw.Sum(h[:0])
 	return h
+}
+
+// Number extract block number from block id.
+func Number(blockID thor.Bytes32) uint32 {
+	// first 4 bytes are over written by block number (big endian).
+	return binary.BigEndian.Uint32(blockID[:])
 }
