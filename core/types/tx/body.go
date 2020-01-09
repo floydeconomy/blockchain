@@ -9,7 +9,7 @@ import (
 // Body contains the body information for a transaction
 // TODO: support more than one clause
 type Body struct {
-	Clause *Clause
+	Clause Clause
 }
 
 // Clause contains information of a cluase
