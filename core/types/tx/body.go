@@ -3,17 +3,32 @@ package tx
 import (
 	"math/big"
 
-	"github.com/vechain/thor/thor"
+	"github.com/ethereum/go-ethereum/common"
 )
 
 // Body contains the body information for a transaction
+// TODO: support more than one clause
 type Body struct {
-	Clauses []*Clause
+	Clause *Clause
 }
 
-// Clause contains the transaction information
+// Clause contains information of a cluase
 type Clause struct {
-	To    *thor.Address `rlp:"nil"`
-	Value *big.Int
-	Data  []byte
+	Recipient *common.Address
+	Amount    *big.Int
+	Data      []byte
+}
+
+// NewClause create a new clause instance.
+func NewClause(to *common.Address) *Clause {
+	if to != nil {
+		// make a copy of 'to'
+		cpy := *to
+		to = &cpy
+	}
+	return &Clause{
+		Recipient: to,
+		Amount:    &big.Int{},
+		Data:      nil,
+	}
 }

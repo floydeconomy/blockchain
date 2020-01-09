@@ -11,14 +11,11 @@ import (
 	// "github.com/ethereum/go-ethereum/crypto"
 	// "github.com/ethereum/go-ethereum/rlp"
 	. "github.com/floydeconomy/blockchain/core/types/block"
+	"github.com/floydeconomy/blockchain/core/types/tx"
 	// "github.com/floydeconomy/blockchain/types"
 )
 
 func TestBlock(t *testing.T) {
-
-	// tx1 := new(tx.Builder).Clause(tx.NewClause(&thor.Address{})).Clause(tx.NewClause(&thor.Address{})).Build()
-	// tx2 := new(tx.Builder).Clause(tx.NewClause(nil)).Build()
-
 	// privKey := string("dce1443bd2ef0c2631adc1c67e5c93f13dc23a41c18b536effbbdcbcdb96fb65")
 	now := uint64(time.Now().UnixNano())
 
@@ -27,29 +24,39 @@ func TestBlock(t *testing.T) {
 		beneficiary common.Address = common.BytesToAddress([]byte("abc"))
 	)
 
+	// Block setup with two transactions
+	tx1 := new(tx.Builder).
+		Clause(tx.NewClause(&common.Address{})).
+		// Clause(tx.NewClause(&common.Address{})).
+		Build()
+
+	tx2 := new(tx.Builder).
+		Clause(tx.NewClause(nil)).
+		Build()
+
 	block := new(Builder).
 		Timestamp(now).
 		ParentID(emptyRoot).
+		Transaction(tx1).
+		Transaction(tx2).
 		Beneficiary(beneficiary).
 		Build()
 
-	h := block.Header()
-	// b := block.Body()
-	// txs := block.Body().Transactions()
+	// Test Setup
+	header := block.Header()
+	body := block.Body()
+	txs := block.Body().Transactions()
+	fmt.Println(header.ID())
 
-	assert.Equal(t, now, h.Timestamp())
-	assert.Equal(t, emptyRoot, h.ParentID())
-	assert.Equal(t, beneficiary, h.Beneficiary())
+	// Header
+	assert.Equal(t, now, header.Timestamp())
+	assert.Equal(t, emptyRoot, header.ParentID())
+	assert.Equal(t, beneficiary, header.Beneficiary())
 
-	fmt.Println(h.ID())
+	// Body
+	assert.Equal(t, txs, body.Txs)
 
-	// h := block.Header()
-	//
-	// txs := block.Transactions()
-	// body := block.Body()
 	// txsRootHash := txs.RootHash()
-	//
-	//
 	// assert.Equal(t, body.Txs, txs)
 	// assert.Equal(t, Compose(h, txs), block)
 	// assert.Equal(t, gasLimit, h.GasLimit())

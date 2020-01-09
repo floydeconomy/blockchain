@@ -46,7 +46,7 @@ func (b *Builder) Build() *Block {
 		body: headerBody,
 	}
 	body := Body{
-		txs: b.txs,
+		Txs: b.txs,
 	}
 	return &Block{
 		header: &header,
