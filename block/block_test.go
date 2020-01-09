@@ -1,16 +1,16 @@
 package block_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
-  "fmt"
 
 	"github.com/stretchr/testify/assert"
 
 	// "github.com/ethereum/go-ethereum/crypto"
 	// "github.com/ethereum/go-ethereum/rlp"
 	. "github.com/floydeconomy/blockchain/block"
-  // "github.com/floydeconomy/blockchain/types"
+	// "github.com/floydeconomy/blockchain/types"
 	"github.com/vechain/thor/thor"
 )
 
@@ -33,26 +33,24 @@ func TestBlock(t *testing.T) {
 		Beneficiary(beneficiary).
 		Build()
 
-  h := block.Header()
-  // b := block.Body()
-  // txs := block.Body().Transactions()
+	h := block.Header()
+	// b := block.Body()
+	// txs := block.Body().Transactions()
 
-  assert.Equal(t, now, h.Timestamp())
-  assert.Equal(t, emptyRoot, h.ParentID())
+	assert.Equal(t, now, h.Timestamp())
+	assert.Equal(t, emptyRoot, h.ParentID())
 	assert.Equal(t, beneficiary, h.Beneficiary())
 
-  fmt.Println(h.ID())
-
-
+	fmt.Println(h.ID())
 
 	// h := block.Header()
-  //
+	//
 	// txs := block.Transactions()
 	// body := block.Body()
 	// txsRootHash := txs.RootHash()
-  //
+	//
 	// fmt.Println(h.ID())
-  //
+	//
 	// assert.Equal(t, body.Txs, txs)
 	// assert.Equal(t, Compose(h, txs), block)
 	// assert.Equal(t, gasLimit, h.GasLimit())
@@ -64,23 +62,23 @@ func TestBlock(t *testing.T) {
 	// assert.Equal(t, emptyRoot, h.ParentID())
 	// assert.Equal(t, beneficiary, h.Beneficiary())
 	// assert.Equal(t, txsRootHash, h.TxsRoot())
-  //
+	//
 	// key, _ := crypto.HexToECDSA(privKey)
 	// sig, _ := crypto.Sign(block.Header().SigningHash().Bytes(), key)
-  //
+	//
 	// block = block.WithSignature(sig)
-  //
+	//
 	// data, _ := rlp.EncodeToBytes(block)
 	// fmt.Println(Raw(data).DecodeHeader())
 	// fmt.Println(Raw(data).DecodeBody())
-  //
+	//
 	// fmt.Println(block.Size())
-  //
+	//
 	// b := Block{}
 	// rlp.DecodeBytes(data, &b)
 	// fmt.Println(b.Header().ID())
 	// fmt.Println(&b)
-  //
+	//
 	// block = new(Builder).
 	// 	GasUsed(gasUsed).
 	// 	GasLimit(gasLimit).
@@ -92,7 +90,7 @@ func TestBlock(t *testing.T) {
 	// 	Beneficiary(beneficiary).
 	// 	TransactionFeatures(1).
 	// 	Build()
-  //
+	//
 	// assert.Equal(t, tx.Features(1), block.Header().TxsFeatures())
 	// data, _ = rlp.EncodeToBytes(block)
 	// var bx Block

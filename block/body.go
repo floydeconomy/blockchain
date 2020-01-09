@@ -1,12 +1,12 @@
 package block
 
 import (
-  "github.com/floydeconomy/blockchain/tx"
+	"github.com/floydeconomy/blockchain/tx"
 )
 
 // Body contains the body information for a transaction
 type Body struct {
-  Txs    tx.Transactions
+	Txs tx.Transactions
 }
 
 // Transactions returns a copy of transactions.
