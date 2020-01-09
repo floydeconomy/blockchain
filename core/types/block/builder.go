@@ -7,25 +7,25 @@ import (
 
 // Builder easy block building
 type Builder struct {
-	blockHeader HeaderBody
-	txs         []*tx.Transaction
+	header Header
+	txs    []*tx.Transaction
 }
 
 // ParentID set parent id.
 func (b *Builder) ParentID(id common.Hash) *Builder {
-	b.blockHeader.ParentID = id
+	b.header.ParentID = id
 	return b
 }
 
 // Timestamp set timestamp
 func (b *Builder) Timestamp(ts uint64) *Builder {
-	b.blockHeader.Timestamp = ts
+	b.header.Timestamp = ts
 	return b
 }
 
 // Beneficiary set beneficiary
 func (b *Builder) Beneficiary(addr common.Address) *Builder {
-	b.blockHeader.Beneficiary = addr
+	b.header.Beneficiary = addr
 	return b
 }
 
@@ -37,13 +37,10 @@ func (b *Builder) Transaction(tx *tx.Transaction) *Builder {
 
 // Build build a block object.
 func (b *Builder) Build() *Block {
-	headerBody := HeaderBody{
-		ParentID:    b.blockHeader.ParentID,
-		Beneficiary: b.blockHeader.Beneficiary,
-		Timestamp:   b.blockHeader.Timestamp,
-	}
 	header := Header{
-		body: headerBody,
+		ParentID:    b.header.ParentID,
+		Beneficiary: b.header.Beneficiary,
+		Timestamp:   b.header.Timestamp,
 	}
 	body := Body{
 		Txs: b.txs,

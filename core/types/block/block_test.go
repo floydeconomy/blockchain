@@ -17,11 +17,12 @@ import (
 
 func TestBlock(t *testing.T) {
 	// privKey := string("dce1443bd2ef0c2631adc1c67e5c93f13dc23a41c18b536effbbdcbcdb96fb65")
-	now := uint64(time.Now().UnixNano())
 
 	var (
-		emptyRoot   common.Hash    = common.BytesToHash([]byte("0"))
-		beneficiary common.Address = common.BytesToAddress([]byte("abc"))
+		blockNumber   uint32         = uint32(0x1)
+		rootBlockHash common.Hash    = common.BytesToHash([]byte("0"))
+		now           uint64         = uint64(time.Now().UnixNano())
+		beneficiary   common.Address = common.BytesToAddress([]byte("miner"))
 	)
 
 	// Block setup with two transactions
@@ -36,25 +37,28 @@ func TestBlock(t *testing.T) {
 
 	block := new(Builder).
 		Timestamp(now).
-		ParentID(emptyRoot).
+		ParentID(rootBlockHash).
 		Transaction(tx1).
 		Transaction(tx2).
 		Beneficiary(beneficiary).
 		Build()
 
 	// Test Setup
-	header := block.Header()
-	body := block.Body()
-	txs := block.Body().Transactions()
-	fmt.Println(header.ID())
+	txs := block.Transactions()
+	fmt.Println(block.ID())
+	fmt.Println(block.Number())
 
-	// Header
-	assert.Equal(t, now, header.Timestamp())
-	assert.Equal(t, emptyRoot, header.ParentID())
-	assert.Equal(t, beneficiary, header.Beneficiary())
+	// Block
+	assert.Equal(t, now, block.Timestamp())
+	assert.Equal(t, rootBlockHash, block.ParentID())
+	assert.Equal(t, beneficiary, block.Beneficiary())
 
 	// Body
-	assert.Equal(t, txs, body.Txs)
+	assert.Equal(t, txs, block.Body().Txs)
+
+	// Header
+	assert.Equal(t, now, block.Header().Timestamp)
+	assert.Equal(t, blockNumber, block.Number())
 
 	// txsRootHash := txs.RootHash()
 	// assert.Equal(t, body.Txs, txs)

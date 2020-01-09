@@ -4,29 +4,24 @@ package tx
 // TODO: clause should support array
 type Builder struct {
 	header Header
-	clause Clause
+	clause []*Clause
 }
 
 // Clause appends a clause
-func (b *Builder) Clause(c Clause) *Builder {
-	b.clause = c
+func (b *Builder) Clause(c *Clause) *Builder {
+	b.clause = append(b.clause, c)
 	return b
 }
 
 // Nonce set nonce
 func (b *Builder) Nonce(nonce uint64) *Builder {
-	b.header.body.Nonce = nonce
+	b.header.Nonce = nonce
 	return b
 }
 
 // Build build tx object
 func (b *Builder) Build() *Transaction {
-	body := Body{
-		Clause: b.clause,
-	}
-	tx := Transaction{
-		header: &b.header,
-		body:   &body,
-	}
+	body := Body{Clause: b.clause}
+	tx := Transaction{header: &b.header, body: &body}
 	return &tx
 }
