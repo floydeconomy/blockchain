@@ -65,6 +65,7 @@ func (b *Block) Beneficiary() common.Address {
 }
 
 // ID returns the block hash of the header, which is simply the keccak256 hash of its RLP Encoding
+// TODO: implement more complex architecture of having RLP Hash seperate from ID
 func (b *Block) ID() (h common.Hash) {
 	hw := sha3.NewLegacyKeccak256()
 	rlp.Encode(hw, b)
