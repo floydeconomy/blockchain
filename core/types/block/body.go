@@ -6,11 +6,10 @@ import (
 
 // Body contains the body information for a transaction
 type Body struct {
-	Txs []*tx.Transaction
+	txs tx.Transactions
 }
 
-// Transactions returns transactions.
-// TODO: use copy instead
-func (b *Body) Transactions() []*tx.Transaction {
-	return b.Txs
+// Transactions returns a copy of transactions.
+func (b *Body) Transactions() tx.Transactions {
+	return append(tx.Transactions(nil), b.txs...)
 }
