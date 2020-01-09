@@ -8,7 +8,6 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/rlp"
-	"github.com/vechain/thor/thor"
 )
 
 // Header holds header information.
@@ -22,14 +21,14 @@ type Header struct {
 
 // HeaderBody contains block headers.
 type HeaderBody struct {
-	ParentID    thor.Bytes32
+	ParentID    common.Hash
 	Timestamp   uint64
-	Beneficiary thor.Address
+	Beneficiary common.Address
 	Signature   []byte
 }
 
 // ParentID returns id of parent block.
-func (h *Header) ParentID() thor.Bytes32 {
+func (h *Header) ParentID() common.Hash {
 	return h.body.ParentID
 }
 
@@ -45,7 +44,7 @@ func (h *Header) Timestamp() uint64 {
 }
 
 // Beneficiary returns the beneficiary
-func (h *Header) Beneficiary() thor.Address {
+func (h *Header) Beneficiary() common.Address {
 	return h.body.Beneficiary
 }
 
@@ -63,7 +62,7 @@ func Hash(x interface{}) (h common.Hash) {
 }
 
 // Number extract block number from block id.
-func Number(blockID thor.Bytes32) uint32 {
+func Number(blockID common.Hash) uint32 {
 	// first 4 bytes are over written by block number (big endian).
 	return binary.BigEndian.Uint32(blockID[:])
 }

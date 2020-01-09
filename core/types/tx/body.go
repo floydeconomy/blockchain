@@ -1,6 +1,8 @@
 package tx
 
 import (
+	"math/big"
+
 	"github.com/vechain/thor/thor"
 )
 
@@ -11,7 +13,7 @@ type Body struct {
 
 // Clause contains the transaction information
 type Clause struct {
-	Payee  thor.Address
-	Payer  thor.Address
-	Amount uint32
+	To    *thor.Address `rlp:"nil"`
+	Value *big.Int
+	Data  []byte
 }

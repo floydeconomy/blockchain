@@ -5,13 +5,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/assert"
 
 	// "github.com/ethereum/go-ethereum/crypto"
 	// "github.com/ethereum/go-ethereum/rlp"
 	. "github.com/floydeconomy/blockchain/core/types/block"
 	// "github.com/floydeconomy/blockchain/types"
-	"github.com/vechain/thor/thor"
 )
 
 func TestBlock(t *testing.T) {
@@ -23,8 +23,8 @@ func TestBlock(t *testing.T) {
 	now := uint64(time.Now().UnixNano())
 
 	var (
-		emptyRoot   thor.Bytes32 = thor.BytesToBytes32([]byte("0"))
-		beneficiary thor.Address = thor.BytesToAddress([]byte("abc"))
+		emptyRoot   common.Hash    = common.BytesToHash([]byte("0"))
+		beneficiary common.Address = common.BytesToAddress([]byte("abc"))
 	)
 
 	block := new(Builder).

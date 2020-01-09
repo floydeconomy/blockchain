@@ -1,8 +1,8 @@
 package block
 
 import (
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/floydeconomy/blockchain/core/types/tx"
-	"github.com/vechain/thor/thor"
 )
 
 // Builder easy block building
@@ -12,7 +12,7 @@ type Builder struct {
 }
 
 // ParentID set parent id.
-func (b *Builder) ParentID(id thor.Bytes32) *Builder {
+func (b *Builder) ParentID(id common.Hash) *Builder {
 	b.blockHeader.ParentID = id
 	return b
 }
@@ -24,7 +24,7 @@ func (b *Builder) Timestamp(ts uint64) *Builder {
 }
 
 // Beneficiary set beneficiary
-func (b *Builder) Beneficiary(addr thor.Address) *Builder {
+func (b *Builder) Beneficiary(addr common.Address) *Builder {
 	b.blockHeader.Beneficiary = addr
 	return b
 }
