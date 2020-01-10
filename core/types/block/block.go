@@ -15,9 +15,13 @@ import (
 type Block struct {
 	header *Header
 	body   *Body
+
+	cache struct {
+		id atomic.Value
+	}
 }
 
-// Body contains the body information for a transaction
+// Body contains the body information for a block
 type Body struct {
 	Txs tx.Transactions
 }
@@ -28,10 +32,6 @@ type Header struct {
 	Timestamp   uint64
 	Beneficiary common.Address
 	Signature   []byte
-
-	cache struct {
-		id atomic.Value
-	}
 }
 
 // Header returns the block header.
@@ -65,11 +65,15 @@ func (b *Block) Beneficiary() common.Address {
 }
 
 // ID returns the block hash of the header, which is simply the keccak256 hash of its RLP Encoding
-// TODO: implement more complex architecture of having RLP Hash seperate from ID
+// TODO: implement block number
 func (b *Block) ID() (h common.Hash) {
+	if hash := b.cache.id.Load(); hash != nil {
+		return hash.(common.Hash)
+	}
 	hw := sha3.NewLegacyKeccak256()
 	rlp.Encode(hw, b)
 	hw.Sum(h[:0])
+	b.cache.id.Store(h)
 	return h
 }
 

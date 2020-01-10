@@ -45,8 +45,10 @@ func TestBlock(t *testing.T) {
 
 	// Test Setup
 	txs := block.Transactions()
-	fmt.Println("ID: ", block.ID())
-	fmt.Println("Number: ", block.Number())
+	id := block.ID()
+	number := block.Number()
+	fmt.Println("ID: ", id)
+	fmt.Println("Number: ", number)
 
 	// Block
 	assert.Equal(t, now, block.Timestamp())
@@ -59,6 +61,11 @@ func TestBlock(t *testing.T) {
 	// Header
 	assert.Equal(t, now, block.Header().Timestamp)
 	assert.Equal(t, blockNumber, block.Number())
+
+	// Caches
+	assert.Equal(t, id, block.ID())
+
+	// assert.Equal(t, , block.ID())
 
 	// txsRootHash := txs.RootHash()
 	// assert.Equal(t, body.Txs, txs)
