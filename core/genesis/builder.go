@@ -7,7 +7,6 @@ import (
 )
 
 // GenesisBlockParentHash ensure genesis number is 0
-// Also used in genesis_test
 var GenesisBlockParentHash common.Hash = common.Hash{0xff, 0xff, 0xff, 0xff}
 
 // Builder helper to build genesis block.
