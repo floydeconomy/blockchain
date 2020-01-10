@@ -9,22 +9,28 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
 	. "github.com/floydeconomy/blockchain/core/genesis"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTestnetGenesis(t *testing.T) {
-	GenesisBlockHash := common.Hash{0xff, 0xff, 0xff, 0xff} //so, genesis number is 0
+	// genesis
+	genesis := NewTestnet()
+	blk := genesis.BuildGenesisBlock()
 
-	gene := NewTestnet()
-	blk := gene.BuildGenesisBlock()
-	id := blk.ParentID()
+	// block
+	genesisParentID := blk.ParentID()
+	genesisID := blk.ID()
+	genesisNumber := blk.Number()
 
-	fmt.Println("Parent ID: ", blk.ParentID())
-	fmt.Println("Block ID: ", blk.ID())
+	// prints
+	fmt.Println("ParentID: ", genesisParentID.String())
+	fmt.Println("Genesis Block ID: ", genesisID.String())
+	fmt.Println("Genesis Block Number: ", genesisNumber)
 
-	assert.Equal(t, "testnet", gene.Name())
-	assert.Equal(t, GenesisBlockHash[:4], id[:4])
-	assert.NotEqual(t, id, blk.ID())
+	// assets
+	assert.Equal(t, NETWORK, genesis.Name())
+	assert.Equal(t, GenesisBlockParentHash[:4], genesisParentID[:4])
+	assert.Equal(t, genesisParentID, GenesisBlockParentHash)
+	assert.Equal(t, uint32(0x0), genesisNumber)
 }

@@ -6,6 +6,10 @@ import (
 	"github.com/floydeconomy/blockchain/core/types/block"
 )
 
+// GenesisBlockParentHash ensure genesis number is 0
+// Also used in genesis_test
+var GenesisBlockParentHash common.Hash = common.Hash{0xff, 0xff, 0xff, 0xff}
+
 // Builder helper to build genesis block.
 type Builder struct {
 	header ChainConfig
@@ -40,10 +44,9 @@ func (b *Builder) ExtraData(data [28]byte) *Builder {
 // Build build genesis block according to presets.
 // TODO: implement stateCreator
 func (b *Builder) Build() *block.Block {
-	GenesisBlockHash := common.Hash{0xff, 0xff, 0xff, 0xff} //so, genesis number is 0
-	copy(GenesisBlockHash[4:], b.body.ExtraData[:])
+	copy(GenesisBlockParentHash[4:], b.body.ExtraData[:])
 	return new(block.Builder).
-		ParentID(GenesisBlockHash).
+		ParentID(GenesisBlockParentHash).
 		Timestamp(b.body.Timestamp).
 		Build()
 }

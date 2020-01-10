@@ -6,6 +6,7 @@
 package genesis
 
 // NETWORK constant depicting the network type
+// Also used in genesis_test
 const NETWORK = "testnet"
 
 // NewTestnet create mainnet genesis.
@@ -14,8 +15,6 @@ func NewTestnet() *Genesis {
 		chainLaunchTime uint64 = uint64(1530014400) // 'Tue Jun 26 2018 20:00:00 GMT+0800 (CST)'
 		extra           [28]byte
 	)
-
-	copy(extra[:], "Salute, Ethereum & Vechain")
 
 	builder := new(Builder).
 		Timestamp(chainLaunchTime).

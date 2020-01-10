@@ -70,6 +70,12 @@ func (b *Block) ID() (h common.Hash) {
 	if hash := b.cache.id.Load(); hash != nil {
 		return hash.(common.Hash)
 	}
+	defer func() {
+		// overwrite first 4 bytes of block hash to block number.
+		binary.BigEndian.PutUint32(h[:], b.Number())
+		b.cache.id.Store(h)
+	}()
+
 	hw := sha3.NewLegacyKeccak256()
 	rlp.Encode(hw, b)
 	hw.Sum(h[:0])
