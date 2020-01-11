@@ -79,11 +79,19 @@ func (b *Block) ID() (h common.Hash) {
 	hw := sha3.NewLegacyKeccak256()
 	rlp.Encode(hw, b)
 	hw.Sum(h[:0])
-	b.cache.id.Store(h)
 	return h
 }
 
 // Transactions returns a copy of transactions.
 func (b *Block) Transactions() tx.Transactions {
 	return append(tx.Transactions(nil), b.body.Txs...)
+}
+
+// Compose compose a block with all needed components
+// Note: This method is usually to recover a block by its portions. To build up a block, use a Builder.
+func Compose(header *Header, txs tx.Transactions) *Block {
+	return &Block{
+		header: header,
+		body:   &Body{Txs: append(tx.Transactions(nil), txs...)},
+	}
 }

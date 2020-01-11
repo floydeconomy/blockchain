@@ -35,7 +35,7 @@ func TestTestnetGenesis(t *testing.T) {
 	fmt.Println("Genesis Block ID: ", genesisID)
 	fmt.Println("Genesis Block Number: ", genesisNumber)
 
-	// assets
+	// asserts
 	assert.Equal(t, network, genesis.Name())
 	assert.Equal(t, rootHash[:4], genesisParentID[:4])
 	assert.Equal(t, rootHash, genesisParentID)

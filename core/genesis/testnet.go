@@ -6,7 +6,6 @@
 package genesis
 
 // NETWORK constant depicting the network type
-// Also used in genesis_test
 const NETWORK = "testnet"
 
 // NewTestnet create mainnet genesis.
