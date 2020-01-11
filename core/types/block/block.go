@@ -2,6 +2,7 @@ package block
 
 import (
 	"encoding/binary"
+	"io"
 	"sync/atomic"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -95,3 +96,31 @@ func Compose(header *Header, txs tx.Transactions) *Block {
 		body:   &Body{Txs: append(tx.Transactions(nil), txs...)},
 	}
 }
+
+// EncodeRLP implements rlp.Encoder.
+func (b *Block) EncodeRLP(w io.Writer) error {
+	return rlp.Encode(w, []interface{}{
+		b.header,
+		b.body,
+	})
+}
+
+// // DecodeRLP implements rlp.Decoder.
+// func (b *Block) DecodeRLP(s *rlp.Stream) error {
+// 	_, size, _ := s.Kind()
+// 	payload := struct {
+// 		header Header
+// 		body   Body
+// 	}{}
+//
+// 	if err := s.Decode(&payload); err != nil {
+// 		return err
+// 	}
+//
+// 	*b = Block{
+// 		header: &payload.Header,
+// 		txs:    payload.Txs,
+// 	}
+// 	b.cache.size.Store(metric.StorageSize(rlp.ListSize(size)))
+// 	return nil
+// }

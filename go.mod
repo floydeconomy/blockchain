@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/ethereum/go-ethereum v1.9.9
+	github.com/hashicorp/golang-lru v0.0.0-20160813221303-0a025b7e63ad
 	github.com/inconshreveable/log15 v0.0.0-20171019012758-0decfc6c20d9
 	github.com/pkg/errors v0.8.1
 	github.com/prometheus/common v0.0.0-20181113130724-41aa239b4cce

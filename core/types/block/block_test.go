@@ -47,8 +47,9 @@ func TestBlock(t *testing.T) {
 	txs := block.Transactions()
 	id := block.ID()
 	number := block.Number()
-	fmt.Println("ID: ", id)
-	fmt.Println("Number: ", number)
+	fmt.Println("BlockID     : ", id)
+	fmt.Println("BlockNumber : ", number)
+	fmt.Println("Transaction : ", txs)
 
 	// Block
 	assert.Equal(t, now, block.Timestamp())
