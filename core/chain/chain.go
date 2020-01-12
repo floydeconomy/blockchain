@@ -8,6 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/floydeconomy/blockchain/core/types/block"
+	"github.com/theblockchainbook/helpers/cache"
 	"github.com/vechain/thor/co"
 	"github.com/vechain/thor/kv"
 )
@@ -36,8 +37,8 @@ type Chain struct {
 }
 
 type caches struct {
-	rawBlocks *cache
-	receipts  *cache
+	rawBlocks *cache.Manager
+	receipts  *cache.Manager
 }
 
 // New create an instance of Chain.
@@ -66,7 +67,7 @@ func New(kv kv.GetPutter, genesisBlock *block.Block) (*Chain, error) {
 		}
 	}
 
-	rawBlocksCache := newCache(blockCacheLimit, func(key interface{}) (interface{}, error) {
+	rawBlocksCache := cache.NewCache(blockCacheLimit, func(key interface{}) (interface{}, error) {
 		raw, err := loadBlockRaw(kv, key.(common.Hash))
 		if err != nil {
 			return nil, err
