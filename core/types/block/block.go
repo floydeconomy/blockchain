@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"io"
 	"sync/atomic"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/rlp"
@@ -86,6 +87,21 @@ func (b *Block) ID() (h common.Hash) {
 // Transactions returns a copy of transactions.
 func (b *Block) Transactions() tx.Transactions {
 	return append(tx.Transactions(nil), b.body.Txs...)
+}
+
+// HasTransaction check whether there transactions in the block
+func (b *Block) HasTransaction() bool {
+	return len(b.Transactions()) != 0
+}
+
+// HasValidTimestamp check whether timestamp provided is not in the future
+func (b *Block) HasValidTimestamp() bool {
+	return b.Timestamp() < uint64(time.Now().UnixNano())
+}
+
+// IsGenesisBlock check whether it is a genesis block
+func (b *Block) IsGenesisBlock() bool {
+	return b.Number() == 0
 }
 
 // Compose compose a block with all needed components

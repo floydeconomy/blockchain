@@ -3,7 +3,6 @@ package block_test
 import (
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/assert"
@@ -21,7 +20,7 @@ func TestBlock(t *testing.T) {
 	var (
 		blockNumber   uint32         = uint32(0x1)
 		rootBlockHash common.Hash    = common.BytesToHash([]byte("0"))
-		now           uint64         = uint64(time.Now().UnixNano())
+		time          uint64         = uint64(1630014400)
 		beneficiary   common.Address = common.BytesToAddress([]byte("miner"))
 	)
 
@@ -36,7 +35,7 @@ func TestBlock(t *testing.T) {
 		Build()
 
 	block := new(Builder).
-		Timestamp(now).
+		Timestamp(time).
 		ParentID(rootBlockHash).
 		Transaction(tx1).
 		Transaction(tx2).
@@ -52,16 +51,18 @@ func TestBlock(t *testing.T) {
 	fmt.Println("Transaction : ", txs)
 
 	// Block
-	assert.Equal(t, now, block.Timestamp())
+	assert.Equal(t, time, block.Timestamp())
 	assert.Equal(t, rootBlockHash, block.ParentID())
 	assert.Equal(t, beneficiary, block.Beneficiary())
 
 	// Body
 	assert.Equal(t, txs, block.Body().Txs)
+	assert.Equal(t, true, block.HasTransaction())
 
 	// Header
-	assert.Equal(t, now, block.Header().Timestamp)
 	assert.Equal(t, blockNumber, block.Number())
+	assert.Equal(t, true, block.HasValidTimestamp())
+	assert.Equal(t, false, block.IsGenesisBlock())
 
 	// Caches
 	assert.Equal(t, id, block.ID())

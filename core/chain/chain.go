@@ -3,10 +3,10 @@ package chain
 import (
 	"errors"
 	"sync"
-	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/floydeconomy/blockchain/core/keys"
 	"github.com/floydeconomy/blockchain/core/types/block"
 	"github.com/theblockchainbook/helpers/cache"
 	"github.com/vechain/thor/co"
@@ -37,24 +37,24 @@ type Chain struct {
 }
 
 type caches struct {
-	rawBlocks *cache.Manager
-	receipts  *cache.Manager
+	blocks   *cache.Manager
+	receipts *cache.Manager
 }
 
 // New create an instance of Chain.
 func New(kv kv.GetPutter, genesisBlock *block.Block) (*Chain, error) {
-	if genesisBlock.Number() != 0 {
+	if !genesisBlock.IsGenesisBlock() {
 		return nil, errors.New("genesis number != 0")
 	}
-	if len(genesisBlock.Transactions()) != 0 {
+	if genesisBlock.HasTransaction() {
 		return nil, errors.New("genesis block should not have transactions")
 	}
-	if genesisBlock.Timestamp() > uint64(time.Now().UnixNano()) {
+	if !genesisBlock.HasValidTimestamp() {
 		return nil, errors.New("genesis block time cannot be in the future")
 	}
 
 	var bestBlock *block.Block
-	if bestBlockID, err := loadBestBlockID(kv); err != nil {
+	if bestBlockID, err := keys.LoadBestBlockID(kv); err != nil {
 		if !kv.IsNotFound(err) {
 			return nil, err
 		}
@@ -68,11 +68,11 @@ func New(kv kv.GetPutter, genesisBlock *block.Block) (*Chain, error) {
 	}
 
 	rawBlocksCache := cache.NewCache(blockCacheLimit, func(key interface{}) (interface{}, error) {
-		raw, err := loadBlockRaw(kv, key.(common.Hash))
+		raw, err := keys.LoadBlockRaw(kv, key.(common.Hash))
 		if err != nil {
 			return nil, err
 		}
-		return &rawBlock{raw: raw}, nil
+		return &block.RawBlock{Raw: raw}, nil
 	})
 
 	return &Chain{
@@ -81,7 +81,7 @@ func New(kv kv.GetPutter, genesisBlock *block.Block) (*Chain, error) {
 		bestBlock:    bestBlock,
 		tag:          genesisBlock.ID()[31],
 		caches: caches{
-			rawBlocks: rawBlocksCache,
+			blocks: rawBlocksCache,
 		},
 	}, nil
 }
@@ -97,7 +97,7 @@ func handleEmptyGenesisBlock(kv kv.GetPutter, genesisBlock *block.Block) (*block
 	batch := kv.NewBatch()
 
 	// Save to kv
-	if err := saveBestBlock(batch, genesisBlock.ID(), raw); err != nil {
+	if err := keys.SaveBestBlock(batch, genesisBlock.ID(), raw); err != nil {
 		return nil, err
 	}
 
@@ -110,11 +110,11 @@ func handleEmptyGenesisBlock(kv kv.GetPutter, genesisBlock *block.Block) (*block
 
 func handleNotEmptyGenesisBlock(kv kv.GetPutter, bestBlockID common.Hash) (*block.Block, error) {
 	// Load Block
-	raw, err := loadBlockRaw(kv, bestBlockID)
+	raw, err := keys.LoadBlockRaw(kv, bestBlockID)
 	if err != nil {
 		return nil, err
 	}
-	bestBlock, err := (&rawBlock{raw: raw}).Block()
+	bestBlock, err := (&block.RawBlock{Raw: raw}).Block()
 	if err != nil {
 		return nil, err
 	}
@@ -133,7 +133,7 @@ func (c *Chain) BestBlock() *block.Block {
 
 // AddBlock add a new block into block chain.
 func (c *Chain) AddBlock(newBlock *block.Block) error {
-	if newBlock.Timestamp() > uint64(time.Now().UnixNano()) {
+	if !newBlock.HasValidTimestamp() {
 		return errors.New("genesis block time cannot be in the future")
 	}
 
@@ -169,7 +169,7 @@ func (c *Chain) AddBlock(newBlock *block.Block) error {
 
 	// Save to kv
 	batch := c.kv.NewBatch()
-	if err := saveBestBlock(batch, newBlockID, raw); err != nil {
+	if err := keys.SaveBestBlock(batch, newBlockID, raw); err != nil {
 		return err
 	}
 
@@ -178,7 +178,7 @@ func (c *Chain) AddBlock(newBlock *block.Block) error {
 	}
 
 	c.bestBlock = newBlock
-	c.caches.rawBlocks.Add(newBlockID, newRawBlock(raw, newBlock))
+	c.caches.blocks.Add(newBlockID, block.NewRawBlock(raw, newBlock))
 	c.tick.Broadcast()
 
 	return nil
@@ -204,10 +204,10 @@ func (c *Chain) getBlockHeader(id common.Hash) (*block.Header, error) {
 	return raw.Header()
 }
 
-func (c *Chain) getRawBlock(id common.Hash) (*rawBlock, error) {
-	raw, err := c.caches.rawBlocks.GetOrLoad(id)
+func (c *Chain) getRawBlock(id common.Hash) (*block.RawBlock, error) {
+	raw, err := c.caches.blocks.GetOrLoad(id)
 	if err != nil {
 		return nil, err
 	}
-	return raw.(*rawBlock), nil
+	return raw.(*block.RawBlock), nil
 }
