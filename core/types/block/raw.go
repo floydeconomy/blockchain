@@ -4,7 +4,6 @@ import (
 	"bytes"
 
 	"github.com/ethereum/go-ethereum/rlp"
-	"github.com/floydeconomy/blockchain/core/types/tx"
 )
 
 // Raw allows to partially decode components of a block.
@@ -31,13 +30,9 @@ func (r Raw) DecodeBody() (*Body, error) {
 		return nil, err
 	}
 
-	_, _, rest, err := rlp.Split(content)
-	if err != nil {
+	var body Body
+	if err := rlp.Decode(bytes.NewReader(content), &body); err != nil {
 		return nil, err
 	}
-	var txs tx.Transactions
-	if err := rlp.Decode(bytes.NewReader(rest), &txs); err != nil {
-		return nil, err
-	}
-	return &Body{Txs: txs}, nil
+	return &body, nil
 }

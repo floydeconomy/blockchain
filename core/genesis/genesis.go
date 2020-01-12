@@ -2,6 +2,11 @@ package genesis
 
 import "github.com/floydeconomy/blockchain/core/types/block"
 
+const (
+	testnet   string = "testnet"
+	customnet string = "custom"
+)
+
 // Genesis specifies the header fields, state of a genesis block.
 type Genesis struct {
 	builder *Builder

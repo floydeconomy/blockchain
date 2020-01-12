@@ -21,6 +21,7 @@ func saveBestBlock(w kv.Putter, id common.Hash, raw []byte) error {
 	if err := saveBlockRaw(w, id, raw); err != nil {
 		return err
 	}
+
 	return nil
 }
 
