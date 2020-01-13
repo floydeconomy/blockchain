@@ -2,7 +2,7 @@ package block
 
 import (
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/vechain/thor/kv"
+	"github.com/theblockchainbook/helpers/kv"
 )
 
 var (

@@ -8,7 +8,7 @@ import (
 	"github.com/floydeconomy/blockchain/core/genesis"
 	"github.com/floydeconomy/blockchain/core/types/block"
 	"github.com/stretchr/testify/assert"
-	"github.com/vechain/thor/lvldb"
+	"github.com/theblockchainbook/helpers/lvldb"
 )
 
 func TestTestnetGenesis(t *testing.T) {

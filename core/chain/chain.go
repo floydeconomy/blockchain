@@ -8,8 +8,8 @@ import (
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/floydeconomy/blockchain/core/types/block"
 	"github.com/theblockchainbook/helpers/cache"
+	"github.com/theblockchainbook/helpers/kv"
 	"github.com/vechain/thor/co"
-	"github.com/vechain/thor/kv"
 )
 
 var (
