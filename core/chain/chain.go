@@ -6,7 +6,6 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/rlp"
-	"github.com/floydeconomy/blockchain/core/keys"
 	"github.com/floydeconomy/blockchain/core/types/block"
 	"github.com/theblockchainbook/helpers/cache"
 	"github.com/vechain/thor/co"
@@ -54,7 +53,7 @@ func New(kv kv.GetPutter, genesisBlock *block.Block) (*Chain, error) {
 	}
 
 	var bestBlock *block.Block
-	if bestBlockID, err := keys.LoadBestBlockID(kv); err != nil {
+	if bestBlockID, err := block.LoadBestBlockID(kv); err != nil {
 		if !kv.IsNotFound(err) {
 			return nil, err
 		}
@@ -68,7 +67,7 @@ func New(kv kv.GetPutter, genesisBlock *block.Block) (*Chain, error) {
 	}
 
 	rawBlocksCache := cache.NewCache(blockCacheLimit, func(key interface{}) (interface{}, error) {
-		raw, err := keys.LoadBlockRaw(kv, key.(common.Hash))
+		raw, err := block.LoadBlockRaw(kv, key.(common.Hash))
 		if err != nil {
 			return nil, err
 		}
@@ -97,7 +96,7 @@ func handleEmptyGenesisBlock(kv kv.GetPutter, genesisBlock *block.Block) (*block
 	batch := kv.NewBatch()
 
 	// Save to kv
-	if err := keys.SaveBestBlock(batch, genesisBlock.ID(), raw); err != nil {
+	if err := block.SaveBestBlock(batch, genesisBlock.ID(), raw); err != nil {
 		return nil, err
 	}
 
@@ -110,7 +109,7 @@ func handleEmptyGenesisBlock(kv kv.GetPutter, genesisBlock *block.Block) (*block
 
 func handleNotEmptyGenesisBlock(kv kv.GetPutter, bestBlockID common.Hash) (*block.Block, error) {
 	// Load Block
-	raw, err := keys.LoadBlockRaw(kv, bestBlockID)
+	raw, err := block.LoadBlockRaw(kv, bestBlockID)
 	if err != nil {
 		return nil, err
 	}
@@ -169,7 +168,7 @@ func (c *Chain) AddBlock(newBlock *block.Block) error {
 
 	// Save to kv
 	batch := c.kv.NewBatch()
-	if err := keys.SaveBestBlock(batch, newBlockID, raw); err != nil {
+	if err := block.SaveBestBlock(batch, newBlockID, raw); err != nil {
 		return err
 	}
 

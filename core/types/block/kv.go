@@ -1,8 +1,7 @@
-package keys
+package block
 
 import (
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/floydeconomy/blockchain/core/types/block"
 	"github.com/vechain/thor/kv"
 )
 
@@ -41,11 +40,11 @@ func LoadBestBlockID(r kv.Getter) (common.Hash, error) {
 }
 
 // SaveBlockRaw save rlp encoded block raw data.
-func SaveBlockRaw(w kv.Putter, id common.Hash, raw block.Raw) error {
+func SaveBlockRaw(w kv.Putter, id common.Hash, raw Raw) error {
 	return w.Put(append(blockPrefix, id[:]...), raw)
 }
 
 // LoadBlockRaw load rlp encoded block raw data.
-func LoadBlockRaw(r kv.Getter, id common.Hash) (block.Raw, error) {
+func LoadBlockRaw(r kv.Getter, id common.Hash) (Raw, error) {
 	return r.Get(append(blockPrefix, id[:]...))
 }
