@@ -27,7 +27,6 @@ func TestBlock(t *testing.T) {
 	// Block setup with two transactions
 	tx1 := new(tx.Builder).
 		Clause(tx.NewClause(&common.Address{})).
-		// Clause(tx.NewClause(&common.Address{})).
 		Build()
 
 	tx2 := new(tx.Builder).

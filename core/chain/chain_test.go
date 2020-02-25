@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/floydeconomy/blockchain/core/chain"
 	"github.com/floydeconomy/blockchain/core/genesis"
 	"github.com/floydeconomy/blockchain/core/types/block"
+	"github.com/floydeconomy/blockchain/core/types/tx"
 	"github.com/stretchr/testify/assert"
 	"github.com/theblockchainbook/helpers/lvldb"
 )
@@ -54,6 +56,31 @@ func TestTestnetGenesis(t *testing.T) {
 		assert.Equal(t, tt.newBlock.ID(), ch.BestBlock().ID())
 		assert.Equal(t, b0.ID(), ch.GenesisBlock().ID())
 	}
+}
+
+func TestErrorGenesisBlock(t *testing.T) {
+	kv, _ := lvldb.NewMem()
+
+	// Test IsGenesisBlock
+	blockNotGenesis := new(block.Builder).
+		ParentID(common.BytesToHash([]byte("0"))).
+		Build()
+	_, err := chain.New(kv, blockNotGenesis)
+	assert.NotNil(t, err)
+
+	// Test HasTransaction
+	var genesisBlockParentHash common.Hash = common.Hash{0xff, 0xff, 0xff, 0xff}
+	tx := new(tx.Builder).
+		Clause(tx.NewClause(nil)).
+		Build()
+	blockWithTransaction := new(block.Builder).
+		Transaction(tx).
+		ParentID(genesisBlockParentHash).
+		Build()
+	_, err = chain.New(kv, blockWithTransaction)
+	assert.NotNil(t, err)
+
+	// TODO: Test HasValidTimestamp
 }
 
 // For testing purposes, ensure deterministic block creation by not providing timestamp

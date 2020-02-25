@@ -42,6 +42,7 @@ type caches struct {
 
 // New create an instance of Chain.
 func New(kv kv.GetPutter, genesisBlock *block.Block) (*Chain, error) {
+	// run checks
 	if !genesisBlock.IsGenesisBlock() {
 		return nil, errors.New("genesis number != 0")
 	}
@@ -120,6 +121,11 @@ func handleNotEmptyGenesisBlock(kv kv.GetPutter, bestBlockID common.Hash) (*bloc
 	return bestBlock, nil
 }
 
+// Tag returns the tag of the chain
+func (c *Chain) Tag() byte {
+	return c.tag
+}
+
 // GenesisBlock returns the genesis block of the chain
 func (c *Chain) GenesisBlock() *block.Block {
 	return c.genesisBlock
@@ -127,6 +133,8 @@ func (c *Chain) GenesisBlock() *block.Block {
 
 // BestBlock returns the genesis block of the chain
 func (c *Chain) BestBlock() *block.Block {
+	c.rw.RLock()
+	defer c.rw.RUnlock()
 	return c.bestBlock
 }
 
@@ -195,18 +203,14 @@ func (c *Chain) GetBlockHeader(id common.Hash) (*block.Header, error) {
 	return c.getBlockHeader(id)
 }
 
-func (c *Chain) getBlockHeader(id common.Hash) (*block.Header, error) {
+// GetBlockRaw get block rlp encoded bytes for given id.
+// Never modify the returned raw block.
+func (c *Chain) GetBlockRaw(id common.Hash) (block.Raw, error) {
+	c.rw.RLock()
+	defer c.rw.RUnlock()
 	raw, err := c.getRawBlock(id)
 	if err != nil {
 		return nil, err
 	}
-	return raw.Header()
-}
-
-func (c *Chain) getRawBlock(id common.Hash) (*block.RawBlock, error) {
-	raw, err := c.caches.blocks.GetOrLoad(id)
-	if err != nil {
-		return nil, err
-	}
-	return raw.(*block.RawBlock), nil
+	return raw.Raw, nil
 }
